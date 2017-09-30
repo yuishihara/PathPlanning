@@ -19,26 +19,24 @@
 #  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
-import numpy as np
 
-class Configuration():
-  def __init__(self, x, y):
-    self._x = x
-    self._y = y
-    self._next_nodes = []
+class Tree():
+  def __init__(self, configuration):
+    self.root = configuration
 
 
-  def position(self):
-    return np.array((self._x, self._y))
+  def get_root(self):
+    return self.root
 
 
-  def connect(self, next_q):
-    self._next_nodes.append(next_q)
-
-
-  def connected_nodes(self):
-    return self._next_nodes
-
-
-  def distance_between(self, another_q):
-    return np.linalg.norm(self.position() - another_q.position())
+  def find_nearest(self, target_q):
+    nearest = self.root
+    min_distance = nearest.distance_between(target_q)
+    for node in nearest.connected_nodes():
+      sub_tree = Tree(node)
+      candidate = sub_tree.find_nearest(target_q)
+      distance = candidate.distance_between(target_q)
+      if distance < min_distance:
+        nearest = candidate
+        min_distance = distance
+    return nearest
