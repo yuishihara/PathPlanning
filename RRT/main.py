@@ -24,7 +24,8 @@ import numpy as np
 import random
 
 import configuration as q
-import tree
+from tree import Tree
+from fasttree import FastTree
 
 MIN_X = 0
 MAX_X = 100
@@ -58,30 +59,29 @@ def build_rrt(q_init, vertices_num, delta_q):
   @param delta_q incremental distance
   @return rapidly exploring random tree
   """
-  rrt = tree.Tree(q_init)
+  rrt = FastTree(q_init)
   for i in range(vertices_num):
     q_rand = generate_random_configuration()
     q_near = find_nearest_vertex(rrt, q_rand)
     q_new = new_configuration(q_near, q_rand, delta_q)
     q_near.connect(q_new) # Add vertex q_new and create edge
+    rrt.add_node(q_new)
 
   return rrt
 
 
 def draw_rrt(graph):
-  plot_whole_tree(graph)
+  plot_whole_tree(graph.get_root())
   plt.xlim(MIN_X, MAX_X)
   plt.ylim(MIN_Y, MAX_Y)
   plt.grid(color='black', linestyle='dotted', linewidth=1)
   plt.show()
 
 
-def plot_whole_tree(graph):
-  root = graph.get_root()
+def plot_whole_tree(root):
   for node in root.connected_nodes():
     draw_line(root.position(), node.position())
-    sub_tree = tree.Tree(node)
-    plot_whole_tree(sub_tree)
+    plot_whole_tree(node)
 
 
 def draw_line(from_pos, to_pos):
@@ -90,9 +90,10 @@ def draw_line(from_pos, to_pos):
 
 def main():
   q_init = q.Configuration(50, 50)
-  vertices_num = 1000
+  vertices_num = 500
   delta_q = 1
   rrt = build_rrt(q_init, vertices_num, delta_q)
+  print 'finish'
   draw_rrt(rrt)
 
 

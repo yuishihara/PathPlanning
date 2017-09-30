@@ -23,13 +23,20 @@ import numpy as np
 
 class Configuration():
   def __init__(self, x, y):
-    self._x = x
-    self._y = y
+    self._position = np.array((x, y))
     self._next_nodes = []
 
 
+  def __getitem__(self, key):
+    return self._position[key]
+
+
+  def __len__(self):
+    return len(self._position)
+
+
   def position(self):
-    return np.array((self._x, self._y))
+    return self._position
 
 
   def connect(self, next_q):

@@ -20,13 +20,17 @@
 #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #  SOFTWARE.
 
-class Tree():
-  def __init__(self, configuration):
-    self.root = configuration
+class Tree(object):
+  def __init__(self, node):
+    self.root = node
 
 
   def get_root(self):
     return self.root
+
+
+  def add_node(self, node):
+    pass
 
 
   def find_nearest(self, target_q):
